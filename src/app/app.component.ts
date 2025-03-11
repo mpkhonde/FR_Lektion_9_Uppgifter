@@ -1,12 +1,34 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Product } from './product.model';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,  
+  imports: [CommonModule], 
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'FR_Lektion_9_Uppgifter';
+  products: Product[] = [];
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    this.fetchProducts();
+  }
+
+  fetchProducts() {
+    this.http.get<Product[]>('https://fakestoreapi.com/products')
+      .subscribe({
+        next: (data) => {
+          this.products = data;
+          console.log("Produkter hämtade:", this.products);
+        },
+        error: (err) => {
+          console.error("Fel vid hämtning av produkter:", err);
+        }
+      });
+  }
 }

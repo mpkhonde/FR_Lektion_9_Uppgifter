@@ -1,34 +1,26 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router'; 
 import { Product } from './product.model';
 
 @Component({
   selector: 'app-root',
-  standalone: true,  
-  imports: [CommonModule], 
+  standalone: true,
+  imports: [CommonModule, RouterModule], 
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   products: Product[] = [];
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    this.fetchProducts();
-  }
-
-  fetchProducts() {
     this.http.get<Product[]>('https://fakestoreapi.com/products')
-      .subscribe({
-        next: (data) => {
-          this.products = data;
-          console.log("Produkter hämtade:", this.products);
-        },
-        error: (err) => {
-          console.error("Fel vid hämtning av produkter:", err);
-        }
+      .subscribe((response) => {
+        this.products = response;
+        console.log("Produkter hämtade:", this.products);
       });
   }
 }

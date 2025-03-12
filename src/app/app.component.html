@@ -1,6 +1,6 @@
 <main>
   <div class="container">
-    <div class="product-card" *ngFor="let item of products">
+    <div class="product-card" *ngFor="let item of products()">
       <img [src]="item.image" alt="{{ item.title }}" class="product-image">
       <h2>{{ item.title }}</h2>
       <p>{{ item.description }}</p>

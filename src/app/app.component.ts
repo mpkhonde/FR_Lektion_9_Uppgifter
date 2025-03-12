@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router'; 
@@ -12,15 +12,20 @@ import { Product } from './product.model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  products: Product[] = [];
+  
+  // Signal för att lagra produkter
+  products = signal<Product[]>([]);
+
+  // Computed signal för att räkna antal produkter
+  productCount = computed(() => this.products().length);
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
     this.http.get<Product[]>('https://fakestoreapi.com/products')
       .subscribe((response) => {
-        this.products = response;
-        console.log("Produkter hämtade:", this.products);
+        this.products.set(response); // Uppdatera signalen
+        console.log("Produkter hämtade:", this.products());
       });
   }
 }
